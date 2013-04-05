@@ -22,7 +22,7 @@ class Song:
             pass
         else:
             
-            self.title = tagdata[3:33]
+            self.title = tagdata[3:33].strip('\x00')
             # self.title = 'qweqwewqe'
         # except IOError:
             
