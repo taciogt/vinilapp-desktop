@@ -1,0 +1,11 @@
+language: python
+python:
+    - 3.2
+branches:
+    only:
+        - master
+
+install:
+    - pip install nose --use-mirrors
+script:
+    - nosetests
