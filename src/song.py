@@ -5,8 +5,7 @@ import pygame
 import pygame.mixer
 
 
-class Song:
-
+class AudioFile:
     def __init__(self, filepath):
         self.title = 'default'
         self.filepath = os.path.join(os.getcwd(), filepath)
@@ -30,5 +29,5 @@ class Song:
 
 
 if __name__ == '__main__':
-    s = Song('./src/BigJack.mp3')
+    s = AudioFile('./src/BigJack.mp3')
     s.play()
