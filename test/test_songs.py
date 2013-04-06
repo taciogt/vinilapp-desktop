@@ -1,6 +1,6 @@
 import unittest
 import os
-
+import src
 from src.song import Song
 
 
@@ -15,3 +15,6 @@ class Mp3Test(unittest.TestCase):
 
         song = Song(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'song-test.mp3'))
         self.assertEqual(song.title, 'Skies on Fire')
+        self.assertEqual(song.artist, 'AC/DC')
+        self.assertEqual(song.album, 'Black Ice [Import]')
+        self.assertEqual(song.year, '2008')
