@@ -1,6 +1,6 @@
 import unittest
 import os
-from song import AudioFile
+from vinilapp.song import AudioFile
 
 
 class Mp3Test(unittest.TestCase):

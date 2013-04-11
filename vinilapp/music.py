@@ -5,7 +5,7 @@ import pygame
 import pygame.mixer
 
 
-class AudioFile:
+class MusicFile:
     def __init__(self, filepath):
         self.title = 'default'
         self.filepath = os.path.join(os.getcwd(), filepath)
