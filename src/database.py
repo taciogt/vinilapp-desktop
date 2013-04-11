@@ -2,12 +2,21 @@
 
 
 def get_db():
-    if Database._db is not None:
-        return Database._db
-    else:
-        Database._db = Database()
-        return Database._db
+    try:
+        singleton = Database()
+    except Database as db:
+        singleton = db
+    return singleton
 
 
 class Database():
     _db = None
+
+    def __init__(self):
+        if Database._db is not None:
+            raise Database._db
+        Database._db = self
+
+
+class DatabaseError(Exception):
+    pass
