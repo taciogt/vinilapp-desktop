@@ -2,8 +2,8 @@
 
 import unittest
 # tácio: por que eu preciso desse 'import database' antes da linha abaixo dela
-import database
-from src.database import *
+# import database
+from src import database
 
 
 class DatabaseTests(unittest.TestCase):

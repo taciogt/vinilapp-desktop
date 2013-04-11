@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import unittest
-from src.start import Program
+from start import Program
 
 class StartTests(unittest.TestCase):
     def test_set_music_folder(self):

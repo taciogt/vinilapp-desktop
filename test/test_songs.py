@@ -1,6 +1,6 @@
 import unittest
 import os
-from src.song import AudioFile
+from song import AudioFile
 
 
 class Mp3Test(unittest.TestCase):
