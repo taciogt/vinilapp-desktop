@@ -4,18 +4,24 @@ import unittest
 import os
 from vinilapp.controller import Controller, Configuration, NoLibraryConfigured
 
+config_file = 'test/configuration.cfg'
+
 
 class ControllerTests(unittest.TestCase):
-
-    def test_none_folder(self):
-        # check the behavior with a None music_folde
-        pass
+    # this tests must be executed from de desktop folder using nosetests
+    # otherwise, the library path must be changed
 
     def test_search_music_folder(self):
-        controller = Controller()
-        test_folder = os.path.join(os.path.realpath(__file__), 'test-search-folder')
+        controller = Controller(config_file)
+        self.assertEqual(controller.config.get_library_path(), './test/test-search-folder')
 
-        controller.music_folder = test_folder
+        controller.update_library()
+
+        self.assertEqual(len(controller.musics), 5)
+
+        titles = [m.title for m in controller.musics]
+
+        self.assertItemsEqual(titles, ['Crystalised', 'Skies on Fire', 'Islands', 'VCR', 'Intro'])
 
 
 config_file_test = 'test-configuration.cfg'

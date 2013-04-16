@@ -1,17 +1,30 @@
 # coding=utf-8
+import os
 import ConfigParser
+from music import MusicFile
 
 
 class Controller:
 
-    def __init__(self):
-        pass
+    def __init__(self, config_file):
+        self.config = Configuration(config_file)
+
+    def _searchFolders(self, directory):
+        folders = [f for f in os.listdir(directory)
+                   if os.path.isdir(os.path.join(directory, f))]
+        for f in folders:
+            self._searchFolders(os.path.join(directory, f))
+
+        music_files = [m for m in os.listdir(directory)
+                       if os.path.splitext(m)[1] in ['.mp3']]
+
+        for m in music_files:
+            self.musics.append(MusicFile(os.path.normcase(os.path.join(directory, m))))
 
     def update_library(self):
-        if self.music_library_folder is None:
-            pass  # handle this
-
-        pass
+        self.musics = []
+        directory = self.config.get_library_path()
+        self._searchFolders(directory)
 
 
 class Configuration:
