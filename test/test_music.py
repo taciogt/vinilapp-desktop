@@ -1,6 +1,6 @@
 import unittest
 import os
-from vinilapp.song import AudioFile
+from vinilapp.music import MusicFile
 
 
 class Mp3Test(unittest.TestCase):
@@ -12,8 +12,8 @@ class Mp3Test(unittest.TestCase):
 
     def test_mp3_constructor(self):
 
-        song = AudioFile(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'song-test.mp3'))
-        self.assertEqual(song.title, 'Skies on Fire')
-        self.assertEqual(song.artist, 'AC/DC')
-        self.assertEqual(song.album, 'Black Ice [Import]')
-        self.assertEqual(song.year, '2008')
+        music = MusicFile(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'song-test.mp3'))
+        self.assertEqual(music.title, 'Skies on Fire')
+        self.assertEqual(music.artist, 'AC/DC')
+        self.assertEqual(music.album, 'Black Ice [Import]')
+        self.assertEqual(music.year, '2008')
