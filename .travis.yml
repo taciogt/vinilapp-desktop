@@ -8,6 +8,7 @@ branches:
 install:
     - pip install nose --use-mirrors
     - pip install pygame --use-mirrors
+    - sudo apt-get install sdl-config
 script:
     - nosetests
 
