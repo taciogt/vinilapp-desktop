@@ -7,6 +7,11 @@ branches:
 
 install:
     - pip install nose --use-mirrors
+
+    # trying to install pygame with these commands
+    - sudo apt-get install sdl-config
+    - pip install pygame --use-mirrors
+
 script:
     - nosetests
 
