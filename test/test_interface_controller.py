@@ -2,7 +2,7 @@
 #!/usr/bin/env
 import unittest
 import os
-from vinilapp.interface_helper import *
+from vinilapp.interface_controller import *
 
 
 class GerenciadorTests(unittest.TestCase):

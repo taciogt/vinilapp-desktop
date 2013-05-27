@@ -68,49 +68,43 @@ class LoginFrame(QtGui.QWidget):
         password = self.input_password.text()
         try:
             self.gerenciador.autenticar(username, password)
-            self.gerenciador.trocar_tela(CarregarArquivosFrame)
         except UsuarioInexistenteException:
             self.label_erro.setText(u"Usuario inexistente")
         except PasswordIncorretoException:
             self.label_erro.setText(u"Password incorreto")
         except:
             self.label_erro.setText(u"Verifique sua conexão com a internet")
+        self.gerenciador.trocar_tela(CarregadorDeArquivosEPlayerFrame)
 
 
-class CarregarArquivosFrame(QtGui.QWidget):
-    """docstring for CarregarArquivosFrame"""
+class CarregadorDeArquivosEPlayerFrame(QtGui.QWidget):
+    """docstring for CarregadorDeArquivosEPlayerFrame"""
     def __init__(self, parent, gerenciador):
-        super(CarregarArquivosFrame, self).__init__(parent)
+        super(CarregadorDeArquivosEPlayerFrame, self).__init__(parent)
         self.gerenciador = gerenciador
         self.construir_interface()
         self.conectar_sinais()
 
     def construir_interface(self):
 
-        self.nova_pagina = QtGui.QPushButton(u'Nova página')
+        self.lista_musicas = QtGui.QListView()
+        self.a = QtGui.QLineEdit()
         layout = QtGui.QGridLayout(self)
-        layout.addWidget(self.nova_pagina, 0, 0)
+        layout.addWidget(self.lista_musicas, 0, 0)
+        layout.addWidget(self.a, 1, 0)
         self.show()
+        self.count = 0
 
     def conectar_sinais(self):
-        self.nova_pagina.clicked.connect(self.mostrar)
+        self.a.returnPressed.connect(self.addElem)
+
+    def addElem(self):
+        text = self.a.text()
+        self.lista_musicas.setText(self.count, text)
+        self.count += 1
 
     def mostrar(self):
         print 'clicou!'
-
-
-class ListarMusicasFrame(QtGui.QWidget):
-    """docstring for ListarMusicasFrame"""
-    def __init__(self, arg):
-        super(ListarMusicasFrame, self).__init__()
-        self.arg = arg
-
-
-class PlayerFrame(QtGui.QWidget):
-    """docstring for PlayerFrame"""
-    def __init__(self, arg):
-        super(PlayerFrame, self).__init__()
-        self.arg = arg
 
 
 def main():
