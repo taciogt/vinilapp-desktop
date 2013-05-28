@@ -1,40 +1,44 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env
+import requests
+import base64
 
 
 class Gerenciador(object):
     """docstring for Gerenciador"""
     def __init__(self):
         self.main_window = None
+        self.username = None
+        self.password = None
+        self.url_base = "http://vinilapp.herokuapp.com"
 
     def autenticar(self, username, password):
-        resultado = self.fazer_requisicao_http(username, password)
-        if resultado['erro'] is None:
-            return 'Usuário autenticado com sucesso'
-        else:
-            if resultado['erro'] == 1:
-                raise UsuarioInexistenteException()
-            elif resultado['erro'] == 2:
-                raise PasswordIncorretoException()
+        self.username = username
+        self.password = password
+        resultado = self.fazer_requisicao_http("/api/login")
+        return (resultado.status_code, resultado.text)
 
-    def fazer_requisicao_http(self, username, password):
-        # import requests, base64
-        # #A url que você vai acessar pra pegar a informação desejada
-        # url = 'http://127.0.0.1:5000/api/musics.json' 
-        # #seu usuário e senha, que você vai ter que guardar para mandar todas as vezes
-        # base64string = base64.encodestring('%s:%s' % (username, password))[:-1]
-        # authheader =  "Basic %s" % base64string
-        # headers = {'Content-Type':'application/json','Authorization':authheader}
-        # #o método pode ser get ou post!
-        # r=requests.get(url,headers=headers)
+    def fazer_requisicao_http(self, endereco):
+        # endereco deve conter o caminho que você quer acessar
+        # 'http://127.0.0.1:5000/api/musics.json'
+        url = self.url_base + endereco
+        # seu usuário e senha, que você vai ter que guardar para mandar todas as vezes
+        base64string = base64.encodestring('%s:%s' % (self.username, self.password))[:-1]
+        authheader = "Basic %s" % base64string
+        headers = {'Content-Type': 'application/json', 'Authorization': authheader}
+        #o método pode ser get ou post!
+        return requests.get(url, headers=headers)
+        # # TODO: fazer requisição ao servidor, transformar a resposta em objeto
+        # # (dict) e retornar o objeto (no mesmo formato do mock)
+        # # self.resultado = urllib2.urlopen() ...
+        # return self.resultado
 
-        # TODO: fazer requisição ao servidor, transformar a resposta em objeto
-        # (dict) e retornar o objeto (no mesmo formato do mock)
-        # self.resultado = urllib2.urlopen() ...
-        return self.resultado
+    def buscar_lista_musicas(self):
+        # Ir no servidor buscar lista de músicas e 
+        pass
 
-    def mock_resultado_requisicao(self, erro):
-        self.resultado = {'erro': erro}
+    def autenticar_mock(self):
+        return (200, "Usuario autenticado com sucesso!")
 
     def set_main_window(self, main_window):
         self.main_window = main_window

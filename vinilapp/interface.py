@@ -2,7 +2,8 @@
 import sys
 from PyQt4 import QtGui
 from PyQt4.QtCore import QObject, SIGNAL, SLOT, pyqtSignal
-from interface_helper import Gerenciador, UsuarioInexistenteException, PasswordIncorretoException
+from interface_controller import Gerenciador
+import fileinfo
 
 
 class MainWindow(QtGui.QMainWindow):
@@ -34,7 +35,6 @@ class LoginFrame(QtGui.QWidget):
         super(LoginFrame, self).__init__(parent)
 
         self.gerenciador = gerenciador
-        self.gerenciador.mock_resultado_requisicao(None)
         self.construir_interface()
         self.conectar_sinais()
 
@@ -66,15 +66,12 @@ class LoginFrame(QtGui.QWidget):
     def on_entrar_click(self):
         username = self.input_username.text()
         password = self.input_password.text()
-        try:
-            self.gerenciador.autenticar(username, password)
-        except UsuarioInexistenteException:
-            self.label_erro.setText(u"Usuario inexistente")
-        except PasswordIncorretoException:
-            self.label_erro.setText(u"Password incorreto")
-        except:
-            self.label_erro.setText(u"Verifique sua conexão com a internet")
-        self.gerenciador.trocar_tela(CarregadorDeArquivosEPlayerFrame)
+        status_code, text = self.gerenciador.autenticar_mock()  # (username, password)
+        if status_code == 200:
+            self.label_erro.setText(u"Usuário autenticado com sucesso!")
+            self.gerenciador.trocar_tela(CarregadorDeArquivosEPlayerFrame)
+        else:
+            self.label_erro.setText(text)
 
 
 class CarregadorDeArquivosEPlayerFrame(QtGui.QWidget):
@@ -86,22 +83,34 @@ class CarregadorDeArquivosEPlayerFrame(QtGui.QWidget):
         self.conectar_sinais()
 
     def construir_interface(self):
+        self.lista_musicas = QtGui.QListWidget()
+        self.escolher_pasta = QtGui.QPushButton("Escolher pasta")
 
-        self.lista_musicas = QtGui.QListView()
-        self.a = QtGui.QLineEdit()
         layout = QtGui.QGridLayout(self)
         layout.addWidget(self.lista_musicas, 0, 0)
-        layout.addWidget(self.a, 1, 0)
+        layout.addWidget(self.escolher_pasta, 0, 1)
         self.show()
-        self.count = 0
 
     def conectar_sinais(self):
-        self.a.returnPressed.connect(self.addElem)
+        #self.a.returnPressed.connect(self.addElem)
+        self.escolher_pasta.clicked.connect(self.buscar_musicas)
+
+    def buscar_musicas(self):
+        filename = QtGui.QFileDialog.getExistingDirectory(
+            self,
+            "Diretório de músicas")
+        # método do Tácio para buscar lista de músicas no servidor
+        # adicionar lista de músicas na janela
+        # habilitar botão de enviar para servidor
+        # começar a tocar as músicas
 
     def addElem(self):
-        text = self.a.text()
-        self.lista_musicas.setText(self.count, text)
-        self.count += 1
+        text = "texto"  # self.a.text()
+        self.lista_musicas.addItem(text)
+
+    def addList(self):
+        lista = ["item 1", "item 2", "item 3", "item 4"]
+        self.lista_musicas.addItems(lista)
 
     def mostrar(self):
         print 'clicou!'
