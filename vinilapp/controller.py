@@ -26,12 +26,20 @@ class Controller:
         directory = self.config.get_library_path()
         self._searchFolders(directory)
 
-    def play_next(self):
-        self.music_playing = self.musics.pop(0)
+    def play(self):
+        self.music_playing = self.musics.get(0)
         self.music_playing.play()
 
     def pause(self):
         self.music_playing.stop()
+
+    def play_next(self):
+        if self.music_playing:
+            self.musics.append(self.music_playing)
+
+        self.musics.remove(0)
+        self.music_playing = self.musics.get(0)
+        self.music_playing.play()
 
     def get_musics_list(self):
         return [music.to_dict() for music in self.musics]
