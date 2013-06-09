@@ -115,6 +115,7 @@ class CarregadorDeArquivosEPlayerFrame(QtGui.QWidget):
         self.escolher_pasta.clicked.connect(self.pegar_caminho_pasta_musicas)
         self.update.clicked.connect(self.enviar_musicas_para_servidor)
         self.play.clicked.connect(self.tocar)
+        self.stop.clicked.connect(self.parar)
         self.quit.clicked.connect(self.fechar_programa)
 
     def carregar_ultima_execucao(self):
@@ -154,6 +155,11 @@ class CarregadorDeArquivosEPlayerFrame(QtGui.QWidget):
     def tocar(self):
         self.controller.play_next()
 
+    def parar(self):
+        self.controller.pause()
+
+    def seguinte(self):
+        self.controller.next_song()
 
 def main():
     app = QtGui.QApplication(sys.argv)

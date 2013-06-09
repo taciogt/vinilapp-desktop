@@ -27,9 +27,11 @@ class Controller:
         self._searchFolders(directory)
 
     def play_next(self):
-        next_music = self.musics.pop(0)
-        next_music.play()
-        self.musics.append(next_music)
+        self.music_playing = self.musics.pop(0)
+        self.music_playing.play()
+
+    def pause(self):
+        self.music_playing.stop()
 
     def get_musics_list(self):
         return [music.to_dict() for music in self.musics]

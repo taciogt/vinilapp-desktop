@@ -1,7 +1,6 @@
 # coding=utf-8
 
 import os
-import json
 import pygame
 import pygame.mixer
 
@@ -32,7 +31,11 @@ class MusicFile:
     def play(self):
         pygame.mixer.init()
         pygame.mixer.music.load(self.filepath)
-        pygame.mixer.music.play(-1)
+        pygame.mixer.music.play()
+
+    def stop(self):
+        pygame.mixer.music.stop()
+
 
     def to_dict(self):
         music_dict = {'artist': self.artist,
