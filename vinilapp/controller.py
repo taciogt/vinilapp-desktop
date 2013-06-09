@@ -26,6 +26,11 @@ class Controller:
         directory = self.config.get_library_path()
         self._searchFolders(directory)
 
+    def play_next(self):
+        next_music = self.musics.pop(0)
+        next_music.play()
+        self.musics.append(next_music)
+
     def get_musics_list(self):
         return [music.to_dict() for music in self.musics]
 
