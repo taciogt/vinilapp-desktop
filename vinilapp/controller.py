@@ -31,6 +31,9 @@ class Controller:
         next_music.play()
         self.musics.append(next_music)
 
+    def get_musics_list(self):
+        return [music.to_dict() for music in self.musics]
+
 
 class Configuration:
 

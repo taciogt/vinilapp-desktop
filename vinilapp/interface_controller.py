@@ -26,12 +26,21 @@ class Gerenciador(object):
         base64string = base64.encodestring('%s:%s' % (self.username, self.password))[:-1]
         authheader = "Basic %s" % base64string
         headers = {'Content-Type': 'application/json', 'Authorization': authheader}
-        #o método pode ser get ou post!
+        # o método pode ser get ou post!
         return requests.get(url, headers=headers)
         # # TODO: fazer requisição ao servidor, transformar a resposta em objeto
         # # (dict) e retornar o objeto (no mesmo formato do mock)
         # # self.resultado = urllib2.urlopen() ...
         # return self.resultado
+
+    def enviar_lista_musicas(self, musics):
+        url = "/api/musics.json"
+        # seu usuário e senha, que você vai ter que guardar para mandar todas as vezes
+        base64string = base64.encodestring('%s:%s' % (self.username, self.password))[:-1]
+        authheader = "Basic %s" % base64string
+        headers = {'Content-Type': 'application/json', 'Authorization': authheader}
+        # o método pode ser get ou post!
+        return requests.post(url, headers=headers, params=musics)
 
     def buscar_lista_musicas(self):
         # Ir no servidor buscar lista de músicas
