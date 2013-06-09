@@ -15,7 +15,7 @@ class MainWindow(QtGui.QMainWindow):
         self.configurar_interface()
 
     def configurar_interface(self):
-        self.setGeometry(300, 100, 500, 200)
+        self.setGeometry(300, 100, 700, 500)
         self.setWindowTitle("VinilApp")
         self.show()
 
@@ -89,6 +89,7 @@ class CarregadorDeArquivosEPlayerFrame(QtGui.QWidget):
         self.lista_musicas = QtGui.QListWidget()
         self.escolher_pasta = QtGui.QPushButton("Escolher pasta")
         self.update = QtGui.QPushButton(u"Enviar Músicas")
+        self.next = QtGui.QPushButton("Next")
         self.play = QtGui.QPushButton("Play")
         self.stop = QtGui.QPushButton("Stop")
         self.quit = QtGui.QPushButton("Quit")
@@ -98,15 +99,16 @@ class CarregadorDeArquivosEPlayerFrame(QtGui.QWidget):
         layout_interacao = QtGui.QHBoxLayout(self)
         layout_interacao.addWidget(self.escolher_pasta)
         layout_interacao.addWidget(self.update)
+        layout_interacao.addWidget(self.quit)
 
         layout_controles = QtGui.QHBoxLayout(self)
         layout_controles.addWidget(self.play)
+        layout_controles.addWidget(self.next)
         layout_controles.addWidget(self.stop)
-        layout_controles.addWidget(self.quit)
 
         layout.addWidget(self.lista_musicas, 0, 0)
-        layout.addLayout(layout_interacao, 1, 0)
-        layout.addLayout(layout_controles, 2, 0)
+        layout.addLayout(layout_controles, 1, 0)
+        layout.addLayout(layout_interacao, 2, 0)
 
         self.setLayout(layout)
         self.show()
@@ -115,6 +117,7 @@ class CarregadorDeArquivosEPlayerFrame(QtGui.QWidget):
         self.escolher_pasta.clicked.connect(self.pegar_caminho_pasta_musicas)
         self.update.clicked.connect(self.enviar_musicas_para_servidor)
         self.play.clicked.connect(self.tocar)
+        self.next.clicked.connect(self.seguinte)
         self.stop.clicked.connect(self.parar)
         self.quit.clicked.connect(self.fechar_programa)
 
@@ -153,13 +156,13 @@ class CarregadorDeArquivosEPlayerFrame(QtGui.QWidget):
         return [music.title for music in self.controller.musics]
 
     def tocar(self):
-        self.controller.play_next()
+        self.controller.play()
 
     def parar(self):
         self.controller.pause()
 
     def seguinte(self):
-        self.controller.next_song()
+        self.controller.play_next()
 
 def main():
     app = QtGui.QApplication(sys.argv)
