@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
 from PyQt4 import QtGui
-from PyQt4.QtCore import QObject, SIGNAL, SLOT, pyqtSignal
 from interface_controller import Gerenciador
-from controller import Controller, Configuration
+from controller import Controller
 
 
 class MainWindow(QtGui.QMainWindow):
@@ -67,7 +66,7 @@ class LoginFrame(QtGui.QWidget):
     def on_entrar_click(self):
         username = self.input_username.text()
         password = self.input_password.text()
-        status_code, text = self.gerenciador.autenticar_mock()  # (username, password)
+        status_code, text = self.gerenciador.autenticar(username, password)  # _mock()  #
         if status_code == 200:
             self.label_erro.setText(u"Usuário autenticado com sucesso!")
             self.gerenciador.trocar_tela(CarregadorDeArquivosEPlayerFrame)
@@ -113,9 +112,9 @@ class CarregadorDeArquivosEPlayerFrame(QtGui.QWidget):
         self.show()
 
     def conectar_sinais(self):
-        #self.a.returnPressed.connect(self.addElem)
         self.escolher_pasta.clicked.connect(self.pegar_caminho_pasta_musicas)
         self.update.clicked.connect(self.enviar_musicas_para_servidor)
+        self.play.clicked.connect(self.tocar)
         self.quit.clicked.connect(self.fechar_programa)
 
     def carregar_ultima_execucao(self):
@@ -146,18 +145,14 @@ class CarregadorDeArquivosEPlayerFrame(QtGui.QWidget):
         self.lista_musicas.addItems(lista)
 
     def enviar_musicas_para_servidor(self):
-        self.gerenciador.enviar_lista_musicas(self.controller.get_musics_list())
+        print self.gerenciador.enviar_lista_musicas(self.controller.get_musics_list())
 
     def pegar_nome_musicas(self):
         self.controller.update_library()
         return [music.title for music in self.controller.musics]
 
-    def addElem(self):
-        text = "texto"  # self.a.text()
-        self.lista_musicas.addItem(text)
-
-    def mostrar(self):
-        print 'clicou!'
+    def tocar(self):
+        self.controller.play_next()
 
 
 def main():

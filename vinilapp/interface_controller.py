@@ -2,6 +2,7 @@
 #!/usr/bin/env
 import requests
 import base64
+import json
 
 
 class Gerenciador(object):
@@ -34,13 +35,15 @@ class Gerenciador(object):
         # return self.resultado
 
     def enviar_lista_musicas(self, musics):
-        url = "/api/musics.json"
+        url = self.url_base + "/api/musics.json"
         # seu usuário e senha, que você vai ter que guardar para mandar todas as vezes
         base64string = base64.encodestring('%s:%s' % (self.username, self.password))[:-1]
         authheader = "Basic %s" % base64string
         headers = {'Content-Type': 'application/json', 'Authorization': authheader}
         # o método pode ser get ou post!
-        return requests.post(url, headers=headers, params=musics)
+        enviar = json.dumps({'musics': musics})
+        print enviar
+        return requests.post(url, headers=headers, data=enviar)
 
     def buscar_lista_musicas(self):
         # Ir no servidor buscar lista de músicas
