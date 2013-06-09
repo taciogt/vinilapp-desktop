@@ -27,7 +27,7 @@ class Controller:
         self._searchFolders(directory)
 
     def play(self):
-        self.music_playing = self.musics.get(0)
+        self.music_playing = self.musics[0]
         self.music_playing.play()
 
     def pause(self):
@@ -37,8 +37,8 @@ class Controller:
         if self.music_playing:
             self.musics.append(self.music_playing)
 
-        self.musics.remove(0)
-        self.music_playing = self.musics.get(0)
+        self.musics.pop(0)
+        self.music_playing = self.musics[0]
         self.music_playing.play()
 
     def get_musics_list(self):
