@@ -34,7 +34,7 @@ class Gerenciador(object):
         # return self.resultado
 
     def buscar_lista_musicas(self):
-        # Ir no servidor buscar lista de músicas e 
+        # Ir no servidor buscar lista de músicas
         pass
 
     def autenticar_mock(self):

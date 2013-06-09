@@ -85,20 +85,41 @@ class CarregadorDeArquivosEPlayerFrame(QtGui.QWidget):
     def construir_interface(self):
         self.lista_musicas = QtGui.QListWidget()
         self.escolher_pasta = QtGui.QPushButton("Escolher pasta")
+        self.update = QtGui.QPushButton("Update")
+        self.play = QtGui.QPushButton("Play")
+        self.stop = QtGui.QPushButton("Stop")
+        self.quit = QtGui.QPushButton("Quit")
 
         layout = QtGui.QGridLayout(self)
+
+        layout_interacao = QtGui.QHBoxLayout(self)
+        layout_interacao.addWidget(self.escolher_pasta)
+        layout_interacao.addWidget(self.update)
+
+        layout_controles = QtGui.QHBoxLayout(self)
+        layout_controles.addWidget(self.play)
+        layout_controles.addWidget(self.stop)
+        layout_controles.addWidget(self.quit)
+
         layout.addWidget(self.lista_musicas, 0, 0)
-        layout.addWidget(self.escolher_pasta, 0, 1)
+        layout.addLayout(layout_interacao, 1, 0)
+        layout.addLayout(layout_controles, 2, 0)
+
+        self.setLayout(layout)
         self.show()
 
     def conectar_sinais(self):
         #self.a.returnPressed.connect(self.addElem)
         self.escolher_pasta.clicked.connect(self.buscar_musicas)
+        self.quit.clicked.connect(self.fechar_programa)
+
+    def fechar_programa(self):
+        self.parentWidget().destroy()
 
     def buscar_musicas(self):
-        filename = QtGui.QFileDialog.getExistingDirectory(
-            self,
-            "Diretório de músicas")
+        nome_diretorio = QtGui.QFileDialog.getExistingDirectory(
+            self)
+        print nome_diretorio
         # método do Tácio para buscar lista de músicas no servidor
         # adicionar lista de músicas na janela
         # habilitar botão de enviar para servidor
