@@ -1,11 +1,15 @@
 # coding=utf-8
 
 import os
+import json
 import pygame
 import pygame.mixer
 
 
 class MusicFile:
+
+    hash_seed = 0
+
     def __init__(self, filepath):
         self.title = 'default'
         self.filepath = os.path.join(os.getcwd(), filepath)
@@ -21,13 +25,22 @@ class MusicFile:
             self.artist = tagdata[33:63].strip('\x00')
             self.album = tagdata[63:93].strip('\x00')
             self.year = tagdata[93:97].strip('\x00')
+            self.hash = MusicFile.hash_seed
+
+            MusicFile.hash_seed += 1
 
     def play(self):
         pygame.mixer.init()
         pygame.mixer.music.load(self.filepath)
         pygame.mixer.music.play(-1)
 
+    def to_dict(self):
+        music_dict = {'artist': self.artist,
+                      'title': self.title,
+                      'hash': self.hash}
+        return music_dict
+
 
 if __name__ == '__main__':
-    s = AudioFile('./src/BigJack.mp3')
+    s = MusicFile('./src/BigJack.mp3')
     s.play()
