@@ -40,6 +40,7 @@ class Controller:
         self.musics.pop(0)
         self.music_playing = self.musics[0]
         self.music_playing.play()
+        
 
     def get_musics_list(self):
         return [music.to_dict() for music in self.musics]
