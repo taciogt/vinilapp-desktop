@@ -3,7 +3,7 @@ import sys
 from PyQt4 import QtGui
 from PyQt4.QtCore import QObject, SIGNAL, SLOT, pyqtSignal
 from interface_controller import Gerenciador
-import fileinfo
+from controller import Controller, Configuration
 
 
 class MainWindow(QtGui.QMainWindow):
@@ -60,6 +60,7 @@ class LoginFrame(QtGui.QWidget):
 
     def conectar_sinais(self):
         self.botao_entrar.clicked.connect(self.on_entrar_click)
+        # Para se o usuário digitar e dar enter em algum dos campos de texto
         self.input_username.returnPressed.connect(self.on_entrar_click)
         self.input_password.returnPressed.connect(self.on_entrar_click)
 
@@ -79,13 +80,16 @@ class CarregadorDeArquivosEPlayerFrame(QtGui.QWidget):
     def __init__(self, parent, gerenciador):
         super(CarregadorDeArquivosEPlayerFrame, self).__init__(parent)
         self.gerenciador = gerenciador
+        self.controller = Controller("user.cfg")
+        
         self.construir_interface()
         self.conectar_sinais()
+        self.carregar_ultima_execucao()
 
     def construir_interface(self):
         self.lista_musicas = QtGui.QListWidget()
         self.escolher_pasta = QtGui.QPushButton("Escolher pasta")
-        self.update = QtGui.QPushButton("Update")
+        self.update = QtGui.QPushButton(u"Enviar Músicas")
         self.play = QtGui.QPushButton("Play")
         self.stop = QtGui.QPushButton("Stop")
         self.quit = QtGui.QPushButton("Quit")
@@ -110,28 +114,47 @@ class CarregadorDeArquivosEPlayerFrame(QtGui.QWidget):
 
     def conectar_sinais(self):
         #self.a.returnPressed.connect(self.addElem)
-        self.escolher_pasta.clicked.connect(self.buscar_musicas)
+        self.escolher_pasta.clicked.connect(self.pegar_caminho_pasta_musicas)
+        self.update.clicked.connect(self.enviar_musicas_para_servidor)
         self.quit.clicked.connect(self.fechar_programa)
+
+    def carregar_ultima_execucao(self):
+        try:
+            nome_musicas = self.pegar_nome_musicas()
+            self.mostrar_lista_musicas(nome_musicas)
+        except:
+            print "Última execução indisponível"
 
     def fechar_programa(self):
         self.parentWidget().destroy()
 
-    def buscar_musicas(self):
-        nome_diretorio = QtGui.QFileDialog.getExistingDirectory(
-            self)
-        print nome_diretorio
+    def pegar_caminho_pasta_musicas(self):
+        filename_qt_str = QtGui.QFileDialog.getExistingDirectory(self)
+        filename = str(filename_qt_str)
+        print filename
+        if filename != "":
+            self.controller.config.set_library_path(filename)
+            self.mostrar_lista_musicas(self.pegar_nome_musicas())
+
         # método do Tácio para buscar lista de músicas no servidor
         # adicionar lista de músicas na janela
         # habilitar botão de enviar para servidor
         # começar a tocar as músicas
 
+    def mostrar_lista_musicas(self, lista):
+        self.lista_musicas.clear()
+        self.lista_musicas.addItems(lista)
+
+    def enviar_musicas_para_servidor(self):
+        self.gerenciador.enviar_lista_musicas(self.controller.get_musics_list())
+
+    def pegar_nome_musicas(self):
+        self.controller.update_library()
+        return [music.title for music in self.controller.musics]
+
     def addElem(self):
         text = "texto"  # self.a.text()
         self.lista_musicas.addItem(text)
-
-    def addList(self):
-        lista = ["item 1", "item 2", "item 3", "item 4"]
-        self.lista_musicas.addItems(lista)
 
     def mostrar(self):
         print 'clicou!'

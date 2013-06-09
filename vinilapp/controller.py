@@ -26,6 +26,9 @@ class Controller:
         directory = self.config.get_library_path()
         self._searchFolders(directory)
 
+    def get_musics_list(self):
+        return [music.to_dict() for music in self.musics]
+
 
 class Configuration:
 
