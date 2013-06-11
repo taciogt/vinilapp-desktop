@@ -7,7 +7,7 @@ import pygame.mixer
 
 class MusicFile:
 
-    hash_seed = 0
+    hash_seed = 1
 
     def __init__(self, filepath):
         self.title = 'default'
@@ -36,6 +36,8 @@ class MusicFile:
     def stop(self):
         pygame.mixer.music.stop()
 
+    def is_busy(self):
+        return pygame.mixer.music.get_busy()
 
     def to_dict(self):
         music_dict = {'artist': self.artist,

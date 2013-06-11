@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 from interface_controller import Gerenciador
 from controller import Controller
 
@@ -39,6 +39,8 @@ class LoginFrame(QtGui.QWidget):
 
     def construir_interface(self):
 
+        self.label_image = QtGui.QLabel()
+        self.label_image.setPixmap(QtGui.QPixmap("vinil2.png"))
         self.label_username = QtGui.QLabel('Username')
         self.label_password = QtGui.QLabel('Password')
         self.input_username = QtGui.QLineEdit()
@@ -48,6 +50,7 @@ class LoginFrame(QtGui.QWidget):
         self.botao_entrar = QtGui.QPushButton("Entrar")
 
         layout = QtGui.QGridLayout(self)
+        layout.addWidget(self.label_image, 0, 1, 1, 2)
         layout.addWidget(self.label_username, 1, 0)
         layout.addWidget(self.input_username, 1, 1)
         layout.addWidget(self.label_password, 2, 0)
@@ -123,6 +126,7 @@ class CarregadorDeArquivosEPlayerFrame(QtGui.QWidget):
 
     def carregar_ultima_execucao(self):
         try:
+            self.controller.update_library()
             nome_musicas = self.pegar_nome_musicas()
             self.mostrar_lista_musicas(nome_musicas)
         except:
@@ -137,6 +141,7 @@ class CarregadorDeArquivosEPlayerFrame(QtGui.QWidget):
         print filename
         if filename != "":
             self.controller.config.set_library_path(filename)
+            self.controller.update_library()
             self.mostrar_lista_musicas(self.pegar_nome_musicas())
 
         # método do Tácio para buscar lista de músicas no servidor
@@ -149,20 +154,41 @@ class CarregadorDeArquivosEPlayerFrame(QtGui.QWidget):
         self.lista_musicas.addItems(lista)
 
     def enviar_musicas_para_servidor(self):
-        print self.gerenciador.enviar_lista_musicas(self.controller.get_musics_list())
+        self.gerenciador.enviar_lista_musicas(self.controller.get_musics_list())
 
     def pegar_nome_musicas(self):
-        self.controller.update_library()
         return [music.title for music in self.controller.musics]
 
     def tocar(self):
         self.controller.play()
+        self.timer = QtCore.QTimer()
+        self.timer.start(1000)
+        self.timer.timeout.connect(self.verificar_playback)
 
     def parar(self):
         self.controller.pause()
 
     def seguinte(self):
-        self.controller.play_next()
+        self.buscar_proxima_musica()
+        self.controller.play()
+
+    def verificar_playback(self):
+        # Se tiver acabado de tocar, buscar nova música no servidor
+        current_music = self.controller.get_current_music()
+        if current_music.is_busy():
+            print "busy"
+        # Se não, não fazer nada
+        else:
+            self.buscar_proxima_musica()
+
+    def buscar_proxima_musica(self):
+        self.gerenciador.atualizar_voto(self.controller.get_current_music())
+        lista_musicas = self.gerenciador.buscar_lista_musicas()  # buscar aqui próxima música buscada no servidor
+        print lista_musicas
+        proxima_musica = lista_musicas[0]
+        self.controller.reorder_music_list(proxima_musica["hash"])
+        self.controller.play()
+
 
 def main():
     app = QtGui.QApplication(sys.argv)

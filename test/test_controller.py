@@ -4,7 +4,7 @@ import unittest
 import os
 from vinilapp.controller import Controller, Configuration, NoLibraryConfigured
 
-config_file = 'test/configuration.cfg'
+config_file = 'configuration.cfg'
 
 
 class ControllerTests(unittest.TestCase):
@@ -13,7 +13,7 @@ class ControllerTests(unittest.TestCase):
 
     def test_search_music_folder(self):
         controller = Controller(config_file)
-        self.assertEqual(controller.config.get_library_path(), './test/test-search-folder')
+        self.assertEqual(controller.config.get_library_path(), './test-search-folder')
 
         controller.update_library()
 
@@ -22,6 +22,22 @@ class ControllerTests(unittest.TestCase):
         titles = [m.title for m in controller.musics]
 
         self.assertItemsEqual(titles, ['Crystalised', 'Skies on Fire', 'Islands', 'VCR', 'Intro'])
+
+    def test_reorder_music_list(self):
+        controller = Controller(config_file)
+        controller.update_library()
+        hash1 = []
+        for music in controller.musics:
+            hash1.append(music.hash)
+        self.assertItemsEqual(hash1, [1, 2, 3, 4, 5])
+
+        controller.reorder_music_list(3)
+
+        hash2 = []
+        for music in controller.musics:
+            hash2.append(music.hash)
+        self.assertItemsEqual(hash2, [3, 1, 2, 4, 5])
+
 
 
 config_file_test = 'test-configuration.cfg'

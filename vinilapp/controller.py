@@ -40,10 +40,18 @@ class Controller:
         self.musics.pop(0)
         self.music_playing = self.musics[0]
         self.music_playing.play()
-        
+
+    def get_current_music(self):
+        return self.music_playing
 
     def get_musics_list(self):
         return [music.to_dict() for music in self.musics]
+
+    def reorder_music_list(self, first_music_hash):
+        for music in self.musics:
+            if music.hash == first_music_hash:
+                self.musics.remove(music)
+                self.musics.insert(0, music)
 
 
 class Configuration:
